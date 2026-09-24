@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gerak Parabola — Fisika Kelas 10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#16233d; --ember:#d9552e; --teal:#2f7d6e; --paper:#ece7db; --paper2:#f5f2e9;
+  --ink:#1c1b18; --line: rgba(22,35,61,.14);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:inherit; margin:0; padding:0;}
+html{scroll-padding-top:env(safe-area-inset-top,0px); scroll-behavior:smooth;}
+html,body{height:100%;}
+body{background:var(--paper2); color:var(--ink); font-family:'IBM Plex Sans',sans-serif; line-height:1.55;}
+h1,h2,h3,.disp{font-family:'Fraunces',serif;}
+.wrap{max-width:780px; margin:0 auto; padding:0 24px;}
+header.hero{background:linear-gradient(180deg,var(--navy) 0%, #1e3455 100%); color:var(--paper2); padding:60px 0 80px; position:relative; overflow:hidden;}
+.hero .wrap{position:relative; z-index:2;}
+.eyebrow{font-size:.95rem; color:#a9c2d9; margin-bottom:10px;}
+h1{font-size:clamp(2.1rem,5vw,3.2rem); font-weight:600; line-height:1.08; max-width:12ch;}
+.hero p.lede{margin-top:18px; max-width:46ch; color:#cdd8e6; font-size:1.05rem;}
+.arc{position:absolute; right:10px; top:20px; width:220px; height:180px;}
+@media (max-width:640px){.arc{display:none;}}
+nav.toc{display:flex; gap:8px; flex-wrap:wrap; margin-top:30px;}
+nav.toc a{font-size:.85rem; color:#dfe7f0; text-decoration:none; border:1px solid rgba(255,255,255,.28); padding:7px 14px; border-radius:999px; transition:background .15s;}
+nav.toc a:hover{background:rgba(255,255,255,.1);}
+section{padding:56px 0; border-bottom:1px solid var(--line);}
+section:last-of-type{border-bottom:none;}
+.tag{display:inline-block; font-size:.8rem; letter-spacing:.02em; color:var(--teal); font-weight:600; margin-bottom:8px;}
+.tag.hot{color:var(--ember);}
+h2{font-size:clamp(1.5rem,3.4vw,2rem); font-weight:600; max-width:24ch;}
+section > .wrap > p{max-width:64ch; margin-top:14px; font-size:1.02rem; color:#3a382f;}
+.formula{background:var(--navy); color:var(--paper2); border-radius:4px; padding:20px 24px; margin:16px 10px 16px 0; font-family:'Fraunces',serif; font-size:1.25rem; display:inline-block;}
+.formula small{display:block; font-family:'IBM Plex Sans',sans-serif; font-size:.7rem; color:#a9c2d9; margin-top:8px; letter-spacing:.02em;}
+.formula-row{display:flex; flex-wrap:wrap; gap:0;}
+.comp-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:22px;}
+@media (max-width:640px){.comp-grid{grid-template-columns:1fr;}}
+.ccard{border:1.5px solid var(--line); border-radius:6px; padding:18px; background:var(--paper);}
+.ccard .name{font-family:'Fraunces',serif; font-size:1.1rem; margin-bottom:6px;}
+.ccard .desc{font-size:.9rem; color:#3a382f;}
+/* simulator */
+.tool{background:var(--paper); border:1px solid var(--line); border-radius:6px; padding:24px; margin-top:24px;}
+.tool h3{font-size:1.05rem; font-weight:600; margin-bottom:4px;}
+.tool .hint{font-size:.85rem; color:#5c594d; margin-bottom:18px;}
+.sim-controls{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;}
+@media (max-width:520px){.sim-controls{grid-template-columns:1fr;}}
+.sim-field label{display:flex; justify-content:space-between; font-size:.82rem; color:#5c594d; margin-bottom:6px;}
+.sim-field label .val{color:var(--ink); font-weight:600; font-family:'Fraunces',serif;}
+.sim-field input[type=range]{width:100%; accent-color:var(--teal);}
+.sim-canvas-wrap{background:var(--paper2); border:1.5px solid var(--line); border-radius:4px; overflow:hidden;}
+svg#trajSvg{display:block; width:100%; height:auto;}
+.sim-results{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:16px;}
+@media (max-width:640px){.sim-results{grid-template-columns:repeat(2,1fr);}}
+.res{background:var(--navy); color:var(--paper2); border-radius:4px; padding:12px 10px; text-align:center;}
+.res .lbl{font-size:.68rem; color:#a9c2d9; letter-spacing:.02em;}
+.res .num{font-family:'Fraunces',serif; font-size:1.15rem; margin-top:2px;}
+/* quiz (shared style) */
+.quiz-item{border:1.5px solid var(--line); border-radius:6px; padding:18px; margin-top:14px; background:var(--paper);}
+.quiz-item .q{font-weight:600; margin-bottom:10px;}
+.quiz-opts{display:flex; flex-direction:column; gap:8px;}
+.qopt{text-align:left; padding:9px 12px; border:1.5px solid var(--line); border-radius:4px; background:var(--paper2); cursor:pointer; font-size:.92rem; font-family:inherit; color:var(--ink);}
+.qopt:hover{border-color:var(--teal);}
+.qopt.correct{background:#dcecdf; border-color:var(--teal);}
+.qopt.wrong{background:#f5dcd4; border-color:var(--ember);}
+.qfeedback{margin-top:10px; font-size:.85rem; display:none;}
+.qfeedback.show{display:block;}
+footer{padding:34px 0 50px; text-align:center; color:#8b8877; font-size:.82rem;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Fisika · Kelas 10</div>
+    <h1>Gerak Parabola</h1>
+    <p class="lede">Bola yang dilempar miring ke atas menempuh lintasan lengkung. Sebenarnya itu dua gerak sekaligus, berjalan bersamaan.</p>
+    <nav class="toc">
+      <a href="#komponen">Komponen gerak</a>
+      <a href="#rumus">Rumus</a>
+      <a href="#simulator">Simulator</a>
+      <a href="#latihan">Latihan</a>
+    </nav>
+  </div>
+  <svg class="arc" viewBox="0 0 220 180">
+    <line x1="10" y1="160" x2="210" y2="160" stroke="#8fa9c4" stroke-width="2"/>
+    <path d="M20,160 Q110,20 200,160" fill="none" stroke="#d9552e" stroke-width="3" stroke-dasharray="7 6"/>
+    <circle cx="20" cy="160" r="5" fill="#f5f2e9"/>
+    <circle cx="110" cy="34" r="5" fill="#d9552e"/>
+  </svg>
+</header>
+
+<section id="komponen">
+  <div class="wrap">
+    <span class="tag">01 — Komponen gerak</span>
+    <h2>Dua gerak yang bergabung</h2>
+    <p>Gerak parabola adalah gabungan Gerak Lurus Beraturan (GLB) pada arah horizontal (sumbu-x) dan Gerak Lurus Berubah Beraturan (GLBB) pada arah vertikal (sumbu-y) akibat percepatan gravitasi.</p>
+    <div class="comp-grid">
+      <div class="ccard">
+        <div class="name">Sumbu-x (mendatar)</div>
+        <div class="desc">Kecepatan horizontal vₓ = v₀ cos θ selalu <em>tetap</em> selama di udara — tidak ada percepatan pada arah ini.</div>
+      </div>
+      <div class="ccard">
+        <div class="name">Sumbu-y (vertikal)</div>
+        <div class="desc">Kecepatan vertikal v_y = v₀ sin θ − g·t berubah karena gravitasi — melambat naik, lalu dipercepat turun.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="rumus">
+  <div class="wrap">
+    <span class="tag hot">02 — Rumus utama</span>
+    <h2>Empat rumus yang perlu dihafal</h2>
+    <p>Dengan v₀ = kecepatan awal, θ = sudut elevasi, dan g = percepatan gravitasi (≈10 m/s²):</p>
+    <div class="formula-row">
+      <div class="formula">t_naik = v₀ sin θ / g<small>Waktu mencapai titik tertinggi</small></div>
+      <div class="formula">h = v₀² sin²θ / 2g<small>Tinggi maksimum</small></div>
+      <div class="formula">t_total = 2v₀ sin θ / g<small>Waktu total di udara</small></div>
+      <div class="formula">R = v₀² sin 2θ / g<small>Jarak jangkauan mendatar</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="simulator">
+  <div class="wrap">
+    <span class="tag">03 — Simulator</span>
+    <h2>Coba sendiri lintasannya</h2>
+    <p>Geser kecepatan awal dan sudut elevasi, lihat bagaimana lintasan dan hasil perhitungan berubah.</p>
+    <div class="tool">
+      <h3>Simulator lintasan</h3>
+      <div class="hint">g = 10 m/s² (dianggap tetap, tanpa gesekan udara)</div>
+      <div class="sim-controls">
+        <div class="sim-field">
+          <label>Kecepatan awal (v₀) <span class="val" id="v0Val">20 m/s</span></label>
+          <input type="range" id="v0" min="5" max="40" step="1" value="20">
+        </div>
+        <div class="sim-field">
+          <label>Sudut elevasi (θ) <span class="val" id="thVal">45°</span></label>
+          <input type="range" id="th" min="10" max="80" step="1" value="45">
+        </div>
+      </div>
+      <div class="sim-canvas-wrap">
+        <svg id="trajSvg" viewBox="0 0 700 340" preserveAspectRatio="xMidYMid meet">
+          <line id="ground" x1="20" y1="300" x2="680" y2="300" stroke="#1c1b18" stroke-width="2"/>
+          <path id="trajPath" fill="none" stroke="#d9552e" stroke-width="3" stroke-dasharray="8 6"/>
+          <circle id="apexDot" r="5" fill="#d9552e"/>
+          <circle id="startDot" cx="30" cy="300" r="5" fill="#16233d"/>
+        </svg>
+      </div>
+      <div class="sim-results">
+        <div class="res"><div class="lbl">TINGGI MAKS (h)</div><div class="num" id="rH">—</div></div>
+        <div class="res"><div class="lbl">WAKTU NAIK</div><div class="num" id="rTn">—</div></div>
+        <div class="res"><div class="lbl">WAKTU TOTAL</div><div class="num" id="rTt">—</div></div>
+        <div class="res"><div class="lbl">JARAK (R)</div><div class="num" id="rR">—</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="latihan">
+  <div class="wrap">
+    <span class="tag hot">04 — Latihan</span>
+    <h2>Uji pemahaman</h2>
+    <p>Tiga soal singkat untuk mengecek pemahamanmu (gunakan g = 10 m/s²).</p>
+    <div id="quizWrap"></div>
+  </div>
+</section>
+
+<footer>Media pembelajaran Fisika · Gerak Parabola · Kelas 10</footer>
+
+<script>
+const g=10;
+const v0In=document.getElementById('v0'), thIn=document.getElementById('th');
+const v0Val=document.getElementById('v0Val'), thVal=document.getElementById('thVal');
+const rH=document.getElementById('rH'), rTn=document.getElementById('rTn'), rTt=document.getElementById('rTt'), rR=document.getElementById('rR');
+const trajPath=document.getElementById('trajPath'), apexDot=document.getElementById('apexDot'), startDot=document.getElementById('startDot');
+
+const ORIGIN_X=30, ORIGIN_Y=300, PAD_R=30, PAD_T=25;
+
+function fmt(n){ return n.toLocaleString('id-ID',{maximumFractionDigits:2}); }
+
+function update(){
+  const v0=parseFloat(v0In.value), thDeg=parseFloat(thIn.value);
+  v0Val.textContent=v0+' m/s'; thVal.textContent=thDeg+'°';
+  const th=thDeg*Math.PI/180;
+  const h=(v0*v0*Math.sin(th)*Math.sin(th))/(2*g);
+  const tn=(v0*Math.sin(th))/g;
+  const tt=2*tn;
+  const R=(v0*v0*Math.sin(2*th))/g;
+  rH.textContent=fmt(h)+' m';
+  rTn.textContent=fmt(tn)+' s';
+  rTt.textContent=fmt(tt)+' s';
+  rR.textContent=fmt(R)+' m';
+
+  // scale physical R and h into svg space
+  const availW=680-ORIGIN_X-PAD_R, availH=300-PAD_T;
+  const scaleX=availW/Math.max(R,0.001);
+  const scaleY=availH/Math.max(h,0.001);
+  const scale=Math.min(scaleX,scaleY);
+
+  let d='M'+ORIGIN_X+','+ORIGIN_Y+' ';
+  const steps=40;
+  for(let i=1;i<=steps;i++){
+    const t=(i/steps)*tt;
+    const x=v0*Math.cos(th)*t;
+    const y=v0*Math.sin(th)*t - 0.5*g*t*t;
+    const px=ORIGIN_X + x*scale;
+    const py=ORIGIN_Y - y*scale;
+    d+='L'+px.toFixed(1)+','+py.toFixed(1)+' ';
+  }
+  trajPath.setAttribute('d',d);
+  const apexX=ORIGIN_X + (v0*Math.cos(th)*tn)*scale;
+  const apexY=ORIGIN_Y - h*scale;
+  apexDot.setAttribute('cx',apexX.toFixed(1));
+  apexDot.setAttribute('cy',apexY.toFixed(1));
+}
+[v0In,thIn].forEach(el=>el.addEventListener('input',update));
+update();
+
+// ---- Quiz ----
+const questions=[
+  {q:'Bola dilempar dengan v₀ = 20 m/s pada sudut 30°. Berapa tinggi maksimum yang dicapai? (g=10 m/s²)',
+   opts:['2,5 m','5 m','10 m','20 m'], correct:1,
+   fb:'h = v₀²sin²θ/2g = 400×0,25/20 = 5 m.'},
+  {q:'Pada titik tertinggi lintasan parabola, apa yang terjadi pada komponen kecepatan?',
+   opts:['vₓ = 0, v_y maksimum','vₓ maksimum, v_y = 0','Keduanya nol','Keduanya maksimum'], correct:1,
+   fb:'Di titik tertinggi, kecepatan vertikal v_y = 0, sedangkan vₓ tetap sama seperti awal.'},
+  {q:'Sudut elevasi berapa yang menghasilkan jarak jangkauan (R) terjauh, untuk v₀ tetap?',
+   opts:['30°','45°','60°','90°'], correct:1,
+   fb:'R maksimum saat sin 2θ = 1, yaitu θ = 45°.'}
+];
+const quizWrap=document.getElementById('quizWrap');
+questions.forEach((item,qi)=>{
+  const div=document.createElement('div'); div.className='quiz-item';
+  const qEl=document.createElement('div'); qEl.className='q'; qEl.textContent=(qi+1)+'. '+item.q;
+  div.appendChild(qEl);
+  const optsEl=document.createElement('div'); optsEl.className='quiz-opts';
+  const fbEl=document.createElement('div'); fbEl.className='qfeedback';
+  item.opts.forEach((opt,oi)=>{
+    const btn=document.createElement('button'); btn.className='qopt'; btn.type='button'; btn.textContent=opt;
+    btn.addEventListener('click',()=>{
+      if(btn.disabled) return;
+      [...optsEl.children].forEach(b=>b.disabled=true);
+      if(oi===item.correct){ btn.classList.add('correct'); }
+      else { btn.classList.add('wrong'); optsEl.children[item.correct].classList.add('correct'); }
+      fbEl.textContent=(oi===item.correct?'Benar. ':'Belum tepat. ')+item.fb;
+      fbEl.classList.add('show');
+    });
+    optsEl.appendChild(btn);
+  });
+  div.appendChild(optsEl); div.appendChild(fbEl);
+  quizWrap.appendChild(div);
+});
+</script>
+</body>
+</html>
